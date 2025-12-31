@@ -289,18 +289,9 @@ def init_db():
     conn.commit()
 
     # Create a default admin user
-    # --- UPDATED CODE ---
-    # Retrieve credentials from st.secrets
-    # Use .get() to provide a fallback or handle missing secrets gracefully
-    admin_username = st.secrets.get("ADMIN_USERNAME", "admin")
-    admin_password = st.secrets.get("ADMIN_PASSWORD")
+    admin_username = 'admin'
+    admin_new_password_hash = make_hashes("admin1024098")
     
-    if not admin_password:
-        st.error("Critical Error: ADMIN_PASSWORD not found in secrets. Contact support.")
-        st.stop()
-    
-    admin_new_password_hash = make_hashes(admin_password)
-
     c.execute("SELECT COUNT(*) FROM users WHERE username=?", (admin_username,))
     if c.fetchone()[0] == 0:
         c.execute("INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)", 
